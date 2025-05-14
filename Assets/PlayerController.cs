@@ -15,32 +15,40 @@ public class PlayerController : MonoBehaviour
    [SerializeField]
    LayerMask groundLayer;
 
+   [SerializeField]
+   float speed;
+
 
 
     void Update()
     {
-        if (Input.GetAxisRaw("Jump") > 0 && mayJump == true) 
+        
+        float xInput = Input.GetAxisRaw("Horizontal");
+        Vector2 movment = new Vector2(xInput, 0) * speed * Time.deltaTime;
+        
+        transform.Translate(movment);
+        
+        if (Input.GetAxisRaw("Jump") > 0 && mayJump == true && IsGrounded()) 
         {
             
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
-            
             rb.AddForce(Vector2.up * jumpForce);
             mayJump = false;
 
         }
 
-        if(Input.GetAxisRaw("Jump") == 0)
+        if (Input.GetAxisRaw("Jump") == 0)
         {
             mayJump = true;
         }
 
-        print(isGrounded());
+        
 
     }
 
-    private bool isGrounded()
+    private bool IsGrounded()
     {
-     if(Physics2D.OverlapCircle(groundChecker.position, -2f, groundLayer))
+     if(Physics2D.OverlapCircle(groundChecker.position, .2f, groundLayer))
      {
       return true;
      }
